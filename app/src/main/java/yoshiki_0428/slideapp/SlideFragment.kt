@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_slide.view.*
+import org.greenrobot.eventbus.EventBus
+import yoshiki_0428.slideapp.event.SwipeEvent
 
 
 class SlideFragment : Fragment() {
@@ -26,6 +28,14 @@ class SlideFragment : Fragment() {
         view.fragment_slide_description.text = page.description
         view.fragment_next_button.setOnClickListener{
             activity.finish()
+        }
+
+        view.fragment_arrow_right.setOnClickListener {
+            EventBus.getDefault().post(SwipeEvent(1))
+        }
+
+        view.fragment_arrow_left.setOnClickListener {
+            EventBus.getDefault().post(SwipeEvent(-1))
         }
 
         return view

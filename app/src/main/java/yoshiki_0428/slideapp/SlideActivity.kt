@@ -3,8 +3,18 @@ package yoshiki_0428.slideapp
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_slide.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.Subscribe
+import yoshiki_0428.slideapp.event.SwipeEvent
+
 
 class SlideActivity : AppCompatActivity() {
+    override fun onStart() {
+        EventBus.getDefault().register(this)
+        super.onStart()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_slide)
@@ -21,6 +31,7 @@ class SlideActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        EventBus.getDefault().unregister(this)
         super.onPause()
     }
 
@@ -28,7 +39,9 @@ class SlideActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    fun setViewPages(no : Int) {
-        activity_slide_view_pager.setCurrentItem(activity_slide_view_pager.currentItem + no, true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSwipeEvent(event: SwipeEvent) {
+        val currentPage = activity_slide_view_pager.currentItem
+        activity_slide_view_pager.currentItem = currentPage + event.page
     }
 }
